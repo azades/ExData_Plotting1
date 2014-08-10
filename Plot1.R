@@ -1,4 +1,4 @@
-## Coursera / Exploratory Data Analysis / Assignment 1
+## Coursera / Exploratory Data Analysis / Assignment 1 / Plot 1
 
 
 ## Downloading, unzipping and reading the file
