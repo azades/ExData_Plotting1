@@ -1,30 +1,38 @@
-## Coursera / Exploratory Data Analysis / Assignment 1 / Plot 1
-
-
-## Downloading, unzipping and reading the file
+#Download the data
+if (!file.exists("./data")){
+        dir.create("./data")
+}
 fileURL <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
-download.file(fileURL, destfile ="exdata-data-household_power_consumption.zip",
+download.file(fileURL, destfile = "./data/household_power_consumption.zip", 
               method = "curl")
-household_power_consumption <- read.csv(unzip("exdata-data-household_power_consumption.zip",
-                                              "household_power_consumption.txt"),
-                                        sep=";", header=TRUE, na.string="?",
-                                        colClasses=c("character","character",
-                                                     "numeric", "numeric", "numeric", 
-                                                     "numeric","numeric","numeric",
-                                                     "numeric"))
+#Unzip the file
+unzip("./data/household_power_consumption.zip", exdir = "./data")
 
+#Load the data into R
+household_power_consumption <- read.table("./data/household_power_consumption.txt", 
+                                          header = TRUE, 
+                                          sep = ";", 
+                                          colClasses = c("character", "character", 
+                                                         rep("numeric", 7)),
+                                          na = "?")
+dim(household_power_consumption)
+head(household_power_consumption)
 
-## Changing the "Date" format from character to Date and subsetting the "2007-02-01" and "2007-02-02" data.
-household_power_consumption$Date <- as.Date(household_power_consumption$Date, 
-                                            "%d/%m/%Y")
+#Subset the data
 power_consumption <- subset(household_power_consumption, 
-                            Date == as.Date("2007-02-01") | Date == as.Date("2007-02-02"))
-power_consumption$Date <- strptime(paste(power_consumption$Date,
-                                         power_consumption$Time), "%Y-%m-%d %H:%M:%S")
+                            Date == "1/2/2007" | Date == "2/2/2007")
 
+#Adding columns to data frame
+power_consumption$dates <- as.Date(power_consumption$Date, "%d/%m/%Y")         
+power_consumption$DateTime <- strptime(paste(power_consumption$Date, 
+                                             power_consumption$Time), 
+                                       "%d/%m/%Y %H:%M:%S")
+dim(power_consumption)
+head(power_consumption)
 
-## Creating the plot
-png(filename="plot1.png", width=480, height=480)
-hist(power_consumption$Global_active_power, main="Global Active Poewer",
-     xlab="Global Active Power (kilowatts)", col="red")
-dev.off()  
+#Create the plot
+png("./data/plot1.png", width = 480, height = 480)
+hist(power_consumption$Global_active_power,col = "red", 
+     xlab = "Global Active Power (kilowatts)", 
+     main = "Global Active Power")
+dev.off()
